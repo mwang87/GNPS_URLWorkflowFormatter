@@ -1,0 +1,28 @@
+version: '3'
+services:
+  gnpsurl-dash:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gnpsurl-dash
+    volumes:
+      - ./output:/app/output:rw
+      - ./logs:/app/logs:rw
+    ports:
+    - "6558:5000"
+    networks:
+      - default
+      - nginx-net
+    environment:
+      VIRTUAL_HOST: gnpsurl.ucsd.edu
+      VIRTUAL_PORT: 6558
+      LETSENCRYPT_HOST: gnpsurl.ucsd.edu
+      LETSENCRYPT_EMAIL: miw023@ucsd.edu
+    restart: on-failure
+    command: /app/run_server.sh
+
+
+networks:
+  nginx-net:
+    external:
+      name: nginx-net
