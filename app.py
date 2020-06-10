@@ -42,8 +42,36 @@ DASHBOARD = [
     dbc.CardBody(
         [
             html.Div(id='version', children="Version - Release_1"),
+            html.Br(),
+            html.Div(children="Workflow Name"),
+            dcc.Dropdown(
+                id="workflowname",
+                options=[{"label" : "Classical Molecular Networking", "value": "METABOLOMICS-SNETS-V2"}],
+                multi=False,
+                value="METABOLOMICS-SNETS-V2"
+            ),
+            html.Br(),
+            html.Div(children="Workflow Version"),
+            dcc.Dropdown(
+                id="workflowversion",
+                options=[{"label" : "current", "value": "current"}],
+                multi=False,
+                value="current"
+            ),
+            html.Br(),
+            html.Div(children="Workflow Collection"),
+            dcc.Dropdown(
+                id="collectionname",
+                options=[{"label" : "spec_on_server", "value": "spec_on_server"}],
+                multi=False,
+                value="spec_on_server"
+            ),
+            html.Br(),
+            html.Div(children="Files For Analysis"),
             dbc.Textarea(className="mb-3", id='files_text_area', placeholder="Enter full file paths for massive datasets (with or without ftp:// prefix)"),
             
+            html.Br(),
+            html.Div(children="Output URL"),
             dcc.Loading(
                 id="url_string",
                 children=[html.Div([html.Div(id="loading-output-3")])],
@@ -65,9 +93,9 @@ app.layout = html.Div(children=[NAVBAR, BODY])
 # This function will rerun at any 
 @app.callback(
     [Output('url_string', 'children')],
-    [Input('files_text_area', 'value')],
+    [Input('files_text_area', 'value'), Input('collectionname', 'value'), Input('workflowname', 'value'), Input('workflowversion', 'value')],
 )
-def generate_url(files_text_area):
+def generate_url(files_text_area, collectionname, workflowname, workflowversion):
     files_splits = files_text_area.split("\n")
 
     files_splits = [ "f." + filename.replace("ftp://massive.ucsd.edu/", "") for filename in files_splits]
@@ -75,8 +103,9 @@ def generate_url(files_text_area):
     url_base = "https://gnps.ucsd.edu/ProteoSAFe/index.jsp"
 
     hash_dict = {
-        "workflow" : "METABOLOMICS-SNETS-V2",
-        "spec_on_server" : ";".join(files_splits)
+        "workflow" : collectionname,
+        collectionname : ";".join(files_splits),
+        "workflow_version": workflowversion
     }
 
 
