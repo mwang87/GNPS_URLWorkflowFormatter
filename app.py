@@ -103,7 +103,7 @@ def generate_url(files_text_area, collectionname, workflowname, workflowversion)
     url_base = "https://gnps.ucsd.edu/ProteoSAFe/index.jsp"
 
     hash_dict = {
-        "workflow" : collectionname,
+        "workflow" : workflowname,
         collectionname : ";".join(files_splits),
         "workflow_version": workflowversion
     }
